@@ -21,16 +21,6 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  moveForward(150);
-  delay(500);
-  moveBackward(150);
-  delay(500);
-  turnLeft(150);
-  delay(500);
-  turnRight(150);
-  delay(500);
-  stop();
   point_sensor_at(0.0);
   delay(500);
   point_sensor_at(90);
