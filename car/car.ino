@@ -18,25 +18,35 @@ void setup() {
   init_motor();
   init_servo();
   point_sensor_at(90.0);
+
+  pinMode(TRIG_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+
+if (!isObstacle(90)){
   moveForward(150);
-  delay(500);
-  moveBackward(150);
-  delay(500);
+  delay(100);
+  return;
+}
+
+stop();
+bool leftBlocked = isObstacle(150);
+bool rightBlocked = isObstacle(30);
+
+if (!leftBlocked) {
   turnLeft(150);
-  delay(500);
+  delay(400);
+} else if (!rightBlocked) {
   turnRight(150);
-  delay(500);
+  delay(400);
+}else {
+  turnLeft(150);
+  delay(800); // 180 turn
+}
   stop();
-  point_sensor_at(0.0);
-  delay(500);
-  point_sensor_at(90);
-  delay(500);
-  point_sensor_at(180);
-  delay(1000);
+  delay(200);
 }
 
 void moveForward(int speed) {
@@ -96,16 +106,18 @@ void stop() {
   digitalWrite(IN4, LOW);
 }
 
-double uss_pulse(unsigned int pulse_time) {
+double getDistance() {
   digitalWrite(TRIG_PIN, LOW);
   delayMicroseconds(2);
-  digitalWrite(ECHO_PIN, HIGH);
-  delayMicroseconds(pulse_time);
-  digitalWrite(TRIG_PIN, LOW);
-  
-  long echo_time = pulseIn(ECHO_PIN, HIGH);
 
-  return (echo_time * 17) / 1000;
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
+
+  long duration = pulseIn(ECHO_PIN, HIGH, 30000);
+
+  return duration * 0.0343 / 2.0;
+
 }
 
 void init_motor() {
@@ -133,11 +145,16 @@ void point_sensor_at(float angle) {
   servo.write(angle);
 }
 
-bool is_obstacle(float angle, float detection_cutoff_distance) {
+bool isObstacle(float angle) {
+
   point_sensor_at(angle);
-  float distance = uss_pulse(10);
-  if distance > detection_cutoff_distance {
-    stop();
-    is_
+  delay(250);
+  
+  double distance = getDistance();
+
+  if (distance <= 15.0){
+    return true;
+  }else {
+    return false;
   }
 }
