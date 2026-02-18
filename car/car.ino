@@ -25,28 +25,31 @@ void setup() {
 
 void loop() {
 
-if (!isObstacle(90)){
-  moveForward(150);
-  delay(100);
-  return;
-}
+  if (!isObstacle(90)) {
+    moveForward(150);
+    delay(50);
+    return;
+  }
 
-stop();
-bool leftBlocked = isObstacle(150);
-bool rightBlocked = isObstacle(30);
-
-if (!leftBlocked) {
-  turnLeft(150);
-  delay(400);
-} else if (!rightBlocked) {
-  turnRight(150);
-  delay(400);
-}else {
-  turnLeft(150);
-  delay(800); // 180 turn
-}
   stop();
-  delay(200);
+
+  bool leftBlocked = isObstacle(30);
+  bool rightBlocked = isObstacle(150);
+
+  if (leftBlocked) {
+    turnRight(150);
+    delay(1000);
+    return;
+  } 
+  if (rightBlocked) {
+    turnLeft(150);
+    delay(1000);
+    return;
+  }
+  else {
+    turnLeft(150);
+    delay(2000); // 180 turn
+  }
 }
 
 void moveForward(int speed) {
@@ -148,7 +151,7 @@ void point_sensor_at(float angle) {
 bool isObstacle(float angle) {
 
   point_sensor_at(angle);
-  delay(250);
+  delay(1000);
   
   double distance = getDistance();
 
