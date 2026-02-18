@@ -13,7 +13,6 @@
 static Servo servo;
 
 void setup() {
-  // put your setup code here, to run once:
   Serial.begin(9600);
   init_motor();
   init_servo();
@@ -24,27 +23,28 @@ void setup() {
 }
 
 void loop() {
+  if (!isObstacle(90)) {
+    moveForward(150);
+    delay(100);
+    return;
+  }
 
-if (!isObstacle(90)){
-  moveForward(150);
-  delay(100);
-  return;
-}
-
-stop();
-bool leftBlocked = isObstacle(150);
-bool rightBlocked = isObstacle(30);
-
-if (!leftBlocked) {
-  turnLeft(150);
-  delay(400);
-} else if (!rightBlocked) {
-  turnRight(150);
-  delay(400);
-}else {
-  turnLeft(150);
-  delay(800); // 180 turn
-}
+  stop();
+  bool leftBlocked = isObstacle(150);
+  bool rightBlocked = isObstacle(30);
+    
+  if (!leftBlocked) {
+    turnLeft(150);
+    delay(400);
+  } 
+  else if (!rightBlocked) {
+    turnRight(150);
+    delay(400);
+  }
+  else {
+    turnLeft(150);
+    delay(800); // 180 turn
+  }
   stop();
   delay(200);
 }
